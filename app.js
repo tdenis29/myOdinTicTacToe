@@ -1,12 +1,22 @@
-// "use strict";
+const myGameBoardModule = (function() {
+    'use strict';
+    //private method to render gameboard
+    
+    //public method to write/update board with player choice playerChoice?
+}
+)
+const myGameFlowModule = (() => {
+    //who's turn is it?
+
+    //has anybody won?
+
+    //has anybody written on that square before?
+
+}
+)
+
+const Player = (name,playerChoice) => {
+
+}
 
 
-var myFunction = function () {
-    var name = 'Todd';
-    var myOtherFunction = function () {
-      console.log('My name is ' + name);
-    };
-    console.log(name);
-    myOtherFunction(); // call function
-  };
-myFunction();

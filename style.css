@@ -1,0 +1,9 @@
+h1{
+    text-align: center;
+}
+.gameboardDiv{
+    width: 75%;
+    margin: 0 auto;
+    min-height: 600px;
+    background-color: black;
+}
