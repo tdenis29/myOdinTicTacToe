@@ -5,5 +5,17 @@ h1{
     width: 75%;
     margin: 0 auto;
     min-height: 600px;
-    background-color: black;
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: repeat(3, 1fr);
+}
+.cell{
+    padding: 10px;
+    background-color: aqua;
+}
+.mark{
+    height: 100%;
+    width: 100%;
+    font-size: 44px;
+    text-align: center;
 }
