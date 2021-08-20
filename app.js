@@ -40,7 +40,7 @@ const myGame = (() => {
     'use strict';
     //who's turn is it? game starts on x's turn. 
     const isTurn = () => {
-
+        
     }
     // who is x and who is o?
 
@@ -55,11 +55,8 @@ const playerFactory = (name,mark) => {
     'use strict';
     const getName = () => name;
     const getMark = () => mark;
-    const _playerMove = () => {
-        if(isTurn(player)){
+    
 
-        }
-    };
     return { getName, getMark }
 };
 
