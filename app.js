@@ -2,9 +2,10 @@ const myGameBoardModule = (()  => {
     'use strict';
     //intialize gameboard as array on gameboard object
     const _myGameBoard = [
-        ['x','x','x'],
-        ['o','o','o'],
-        ['x','o','x']
+        [1,2,3],
+        [4,5,6],
+        [7,8,9]
+     
     ]
     const gameTable = () => {
         console.table(_myGameBoard);
@@ -13,7 +14,16 @@ const myGameBoardModule = (()  => {
     const myBoardWalk = (array) => {
         for(let i=0; i < _myGameBoard.length; i++){
             for(let j=0; j < _myGameBoard[i].length; j++){
-                console.log(_myGameBoard[i][j])
+                const newDiv = document.createElement('div');
+                newDiv.classList.add('cell');
+                const newP = document.createElement('p')
+                newP.classList.add('mark');
+                // const text = document.createTextNode(_myGameBoard[i][j]);
+                // newP.appendChild(text);
+                // newDiv.appendChild(newP);
+             
+                const divContainer = document.getElementById('divContainer');
+                divContainer.insertBefore(newDiv, null);
             }
         }
     }
@@ -22,10 +32,11 @@ const myGameBoardModule = (()  => {
     return { gameTable, myBoardWalk }    
 })();
 
-myGameBoardModule.myBoardWalk();
-
-const myGameFlowModule = (() => {
+const myGame = (() => {
     'use strict';
+
+    //has the game started?
+
     //who's turn is it?
 
     // who is x and who is o?
@@ -37,14 +48,25 @@ const myGameFlowModule = (() => {
 }
 )
 
-const Player = (name,playerChoice) => {
+
+
+
+const playerFactory = (name,mark) => {
     'use strict';
+    const getName = () => name;
+    const getMark = () => mark;
+    const playerMove = () => {
+   
+    };
+    return { getName, getMark }
+};
 
-    //assign x or o
+const player1 = playerFactory('player1', 'X');
 
-    //what square in the matrix did the player choose? and is it legal?
-    
-
-}
+const player2 = playerFactory('player2', 'O');
 
 
+
+window.addEventListener('load', (e) =>{
+    myGameBoardModule.myBoardWalk();
+});
