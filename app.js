@@ -2,9 +2,9 @@ const myGameBoardModule = (()  => {
     'use strict';
     //intialize gameboard as array on gameboard object
     const _myGameBoard = [
-        [1,2,3],
-        [4,5,6],
-        [7,8,9]
+        [0,1,2],
+        [3,4,5],
+        [6,7,8]
      
     ]
     const gameTable = () => {
@@ -16,8 +16,10 @@ const myGameBoardModule = (()  => {
             for(let j=0; j < _myGameBoard[i].length; j++){
                 const newDiv = document.createElement('div');
                 newDiv.classList.add('cell');
+                newDiv.classList.add('data-index=')
                 const newP = document.createElement('p')
                 newP.classList.add('mark');
+
                 // const text = document.createTextNode(_myGameBoard[i][j]);
                 // newP.appendChild(text);
                 // newDiv.appendChild(newP);
@@ -27,18 +29,19 @@ const myGameBoardModule = (()  => {
             }
         }
     }
-    
+    const myBoardCheck = () => {
+        
+    }
     //public method to write/update board with player choice playerChoice?
     return { gameTable, myBoardWalk }    
 })();
 
 const myGame = (() => {
     'use strict';
+    //who's turn is it? game starts on x's turn. 
+    const isTurn = () => {
 
-    //has the game started?
-
-    //who's turn is it?
-
+    }
     // who is x and who is o?
 
     //has anybody won
@@ -48,15 +51,14 @@ const myGame = (() => {
 }
 )
 
-
-
-
 const playerFactory = (name,mark) => {
     'use strict';
     const getName = () => name;
     const getMark = () => mark;
-    const playerMove = () => {
-   
+    const _playerMove = () => {
+        if(isTurn(player)){
+
+        }
     };
     return { getName, getMark }
 };
