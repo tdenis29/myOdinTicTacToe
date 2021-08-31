@@ -4,13 +4,12 @@ h1{
 .gameboardDiv{
     width: 75%;
     margin: 0 auto;
-    min-height: 600px;
+    height: 600px;
     display: grid;
-    grid-gap: 1px;
+    grid-gap: 10px;
     grid-template-columns: repeat(3, 1fr);
 }
 .cell{
-    padding: 10px;
     background-color: aqua;
 }
 .mark{
