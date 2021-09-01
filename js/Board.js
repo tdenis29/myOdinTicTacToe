@@ -11,7 +11,7 @@ const squareFactory = (x,y, id =`space-${x}-${y}`, taken = null) => {
     return {x,y,id ,taken, htmlSquares}
 }
 //player Factory
-const playerFactory = (_name,_mark, _active) => {
+const Player = (_name,_mark, _active) => {
     'use strict';
     const getName = () => _name;
     const getMark = () => _mark;
@@ -57,7 +57,7 @@ const BoardModule = (() => {
 
     return {
 
-        drawHTMLBoard
+        drawHTMLBoard, spacesArray
 
     }
 
@@ -66,28 +66,23 @@ const BoardModule = (() => {
 const GameModule = (() => {
     "use strict";
     //create instance of board 
-    
-    const newBoard = BoardModule.drawHTMLBoard();
+    const spacesArray = BoardModule.spacesArray();
+    let newBoard = BoardModule.drawHTMLBoard()
     //create instance of players
-        const players = () =>{
-        const playersArray = [];
-        let player1 = playerFactory('Player1',"X" ,true)
-        playersArray.push(player1);
-        let player2 = playerFactory('Player2', "O");
-        playersArray.push(player2);
-        return playersArray
-        }
+    const player1 = Player("player1", "X", false)
     //move
     //validate move
     //checkwin
         return {
             newBoard,
-            players
+       
+            player1,
 
+            spacesArray
         }
 
 })();
-console.log(GameModule.players()[1])
+console.log(GameModule.spacesArray[0][1])
 
 
 
