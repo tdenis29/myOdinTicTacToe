@@ -66,23 +66,23 @@ const BoardModule = (() => {
 const GameModule = (() => {
     "use strict";
     //create instance of board 
+    //spaces Array is computed board 
     const spacesArray = BoardModule.spacesArray();
-    let newBoard = BoardModule.drawHTMLBoard()
+    //draw html board with dynmaic ids for each cell
+    BoardModule.drawHTMLBoard()
     //create instance of players
-    const player1 = Player("player1", "X", false)
+    const players= []
+    const player1 = Player("player1", "X", true)
+    players.push(player1)
+    const player2 = Player("player2", "O", false)
+    players.push(player2)
+    //turn
     //move
     //validate move
     //checkwin
-        return {
-            newBoard,
-       
-            player1,
-
-            spacesArray
-        }
 
 })();
-console.log(GameModule.spacesArray[0][1])
+
 
 
 
