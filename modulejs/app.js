@@ -5,7 +5,8 @@ document.getElementById('startgame').addEventListener('click', e => {
 document.getElementById('divContainer').addEventListener('click', function(e) {
     e.stopPropagation();
     GameModule.handleClick(e)
-}, true)
+
+})
 
 
 

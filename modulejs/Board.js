@@ -142,12 +142,30 @@ const GameModule = (function() {
                                 document.getElementById('divContainer').removeEventListener('click', function(e) {
                                     e.stopPropagation();
                                     GameModule.handleClick(e)
-                                }, true)
+                                    passive = true
+                                },true)
                                 
                             }
                         }
                     }
                 }
+                for (let x = 0; x < array.length - 2; x++ ){
+                    for (let y = 0; y < array.length; y++){
+                        if (array[x][y].taken === owner && 
+                            array[x+1][y].taken === owner && 
+                            array[x+2][y].taken === owner){
+                                win = true
+                                if(win){
+                                    document.getElementById('divContainer').removeEventListener('click', function(e) {
+                                        e.stopPropagation();
+                                        GameModule.handleClick(e)
+                                        passive = true
+                                    },true)
+                                    
+                                }
+                            }
+                        }
+                    }
             
         }
   return {
