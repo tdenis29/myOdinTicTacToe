@@ -9,11 +9,8 @@ const squareFactory = (x,y, id =`space-${x}-${y}`,taken=null) => {
             const divContainer = document.getElementById('divContainer');
             divContainer.insertBefore(newDiv, null);
         }
-
-
-      
-
-    
+        
+        
     return {  htmlSquares, id, taken}
 }
 
@@ -35,7 +32,7 @@ const BoardModule = (() => {
     let _rows = 3;
     //private _columns var
     let _columns = 3;
-
+    
     //public method using private varibales?
     function createSpaces() {
         let spaces = [];
@@ -62,18 +59,11 @@ const BoardModule = (() => {
 
 
     return {
-
         drawHTMLBoard, 
         spaces: createSpaces(),
-  
-
     }
 
 })();
-
-
-
-
 
 const GameModule = (function() {
     "use strict";
@@ -83,7 +73,7 @@ const GameModule = (function() {
     const board = BoardModule.drawHTMLBoard()
     return board
    }
-
+ 
    function createPlayers(){
     const players = [];
     let player1 = Player('Player1',"X",true)
@@ -103,32 +93,73 @@ const GameModule = (function() {
     let mark = playerActive.getMark()
     let cell = e.target;
     cell.innerText = mark;
-    switchTurns();
     let id = cell.id
-    console.log(id)
-    updateTaken(id, mark);
+    switchTurns();
+    updateTaken(id, mark)
+    checkWin(mark, BoardModule.spaces)
    }
 }
-   
    function switchTurns(){
     for(let player of GameModule.players){
         player.active = player.active === true ? false : true;
     }
 }
-    function updateTaken(id, mark){
-      
+    function updateTaken(id,mark){
+        let spacesArray = BoardModule.spaces;
+        for (let i of spacesArray) {
+            for (let j of i) {
+              if(j.id == id){
+                  j.taken = mark
+              }
+            }
+          }
     }
-
-
+    function checkWin(mark, array){
+        const owner = mark
+        console.log(owner)
+        let win = false
+        //horizontal win x is column and y is set to -2 which evaluates to zero each pass to check = [0][0], [1][0], [2][0]
+        for (let x = 0; x < array.length; x++ ){
+            for (let y = 0; y < array.length - 2; y++){
+                if (array[x][y].taken === owner && 
+    				array[x][y+1].taken === owner && 
+    				array[x][y+2].taken === owner){
+                        win = true
+                        if(win){
+                            console.log(`${owner}'s wins!`)
+                        }
+                    }
+                }
+            }
+             //vertical win x is column and x is set to -2 which evaluates to zero each pass to check = [0][0], [0][1], [0][2]
+            for (let x = 0; x < array.length - 2; x++ ){
+                for (let y = 0; y < array.length; y++){
+                    if (array[x][y].taken === owner && 
+                        array[x+1][y].taken === owner && 
+                        array[x+2][y].taken === owner){
+                            win = true
+                            if(win){
+                                document.getElementById('divContainer').removeEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    GameModule.handleClick(e)
+                                }, true)
+                                
+                            }
+                        }
+                    }
+                }
+            
+        }
   return {
     
     startGame,
     players: createPlayers(),
+
     getActivePlayer,
     handleClick,
     switchTurns,
-    updateTaken
-    // placemark
+    updateTaken,
+    checkWin, 
 
   }
 })();
