@@ -54,10 +54,6 @@ const BoardModule = (() => {
             }
         }
    }
-  
-
-
-
     return {
         drawHTMLBoard, 
         spaces: createSpaces(),
@@ -97,6 +93,8 @@ const GameModule = (function() {
     switchTurns();
     updateTaken(id, mark)
     checkWin(mark, BoardModule.spaces)
+   } else {
+       return
    }
 }
    function switchTurns(){
@@ -139,40 +137,61 @@ const GameModule = (function() {
                         array[x+2][y].taken === owner){
                             win = true
                             if(win){
-                                document.getElementById('divContainer').removeEventListener('click', function(e) {
-                                    e.stopPropagation();
-                                    GameModule.handleClick(e)
-                                    passive = true
-                                },true)
-                                
+                                console.log(`${owner}'s wins!`)
+                               
                             }
                         }
                     }
                 }
-                for (let x = 0; x < array.length - 2; x++ ){
+                //diagonal win 
+                for (let x = 0; x < array.length; x++ ){
                     for (let y = 0; y < array.length; y++){
+                        console.log(array[x][y])
                         if (array[x][y].taken === owner && 
-                            array[x+1][y].taken === owner && 
-                            array[x+2][y].taken === owner){
+                            array[x+1][y+1].taken === owner && 
+                            array[x+2][y+2].taken === owner){
+                                
                                 win = true
                                 if(win){
+                                    alert("diagonal")
                                     document.getElementById('divContainer').removeEventListener('click', function(e) {
                                         e.stopPropagation();
                                         GameModule.handleClick(e)
                                         passive = true
-                                    },true)
-                                    
+                                    },true)  
                                 }
+                            } else {
+                        for (let x = 0; x < array.length; x++ ){
+                        for (let y = 0; y < array.length; y++){
+                            console.log(array[x][y])
+                            if (array[x][y+2].taken === owner && 
+                                array[x+1][y+1].taken === owner && 
+                                array[x+2][y].taken === owner){
+                                    
+                                    win = true
+                                    if(win){
+                                        alert("diagonal")
+                                        document.getElementById('divContainer').removeEventListener('click', function(e) {
+                                            e.stopPropagation();
+                                            GameModule.handleClick(e)
+                                            passive = true
+                                        },true)  
+                                    }
+                                } else {
+                                    return 
+                                }
+                            }
                             }
                         }
                     }
-            
+                
+                        }
+            return win 
         }
   return {
     
     startGame,
     players: createPlayers(),
-
     getActivePlayer,
     handleClick,
     switchTurns,
