@@ -34,7 +34,7 @@ const BoardModule = (() => {
     let _columns = 3;
     
     //public method using private varibales?
-    function createSpaces() {
+    function createSpaces(squares) {
         let spaces = [];
         for(let x=0; x < _columns; x++){
             const column = [];
