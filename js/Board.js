@@ -76,7 +76,7 @@ const BoardModule = (() => {
             updateBoardState
         }
 })()
-console.log(BoardModule)
+
 //Game Module 
 //will handle create instance of board
 //keep track of turn 
@@ -89,14 +89,32 @@ const GameModule = (() => {
         let state = BoardModule.getBoardState()
         if(state === null){
             BoardModule.drawHTMLBoard()
-            BoardModule.updateBoardState(true)
+            BoardModule.updateBoardState("Playing")
         } else {
             return
         }
     }
+    function createPlayers(){
+        const players = [];
+        let player1 = playerFactory('Player1',"X",true)
+        players.push(player1);
+        let player2 = playerFactory('Player2',"O");
+        players.push(player2);
+        return players
+       }
 
+       function getActivePlayer(){
+        for(let player of this.players){
+            if(player.getActive() === true){
+                return player
+            }
+        } return player
+}
+        
     return {
-        startGame
+        startGame,
+        players: createPlayers(),
+        getActivePlayer,
     }
 })()
 
