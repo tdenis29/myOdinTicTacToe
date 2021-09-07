@@ -106,6 +106,12 @@ const GameModule = (() => {
             return
         }
     }
+    // function resetGame(){
+    //     let state = BoardModule.getBoardState()
+    //     if(state == "Win" || state == "Tie"){
+    //        window.location.reload()
+    //     }
+    // }
     function applyEvent(){
        let cells = document.getElementsByClassName("cell")
        let cellarray = Array.from(cells)
@@ -139,28 +145,30 @@ const GameModule = (() => {
           }
         }
        const handleClick = function (e) {
+        if(BoardModule.getBoardState() === "Playing"){
         e.stopPropagation();
-        if(e.target.classList.contains("cell") && e.target.innerText === ""){
-            let array = BoardModule.squares;
-            let playerActive = getActivePlayer()
-            let mark = playerActive.getMark()
-            let cell = e.target
-            let id = cell.id
-            cell.innerText = mark
-            
-
-
-            updateTaken(id,mark, array)
-            switchTurns()
-            if(!checkWin(mark, array)){
-                checkTie(array)
-            } else {
-                checkWin(mark,array)
-            }
+            if(e.target.classList.contains("cell") && e.target.innerText === ""){
+                let array = BoardModule.squares;
+                let playerActive = getActivePlayer()
+                let mark = playerActive.getMark()
+                let cell = e.target
+                let id = cell.id
+                cell.innerText = mark
         
-        }
-    }   
-     
+                updateTaken(id,mark, array)
+                switchTurns()
+                if(!checkWin(mark, array)){
+                    checkTie(array)
+                } 
+            
+                if(BoardModule.getBoardState() === "Win" || BoardModule.getBoardState() === "Tie"){
+                        removeEvent()
+                    }
+            
+                }
+        
+            } 
+    }
         function checkWin(mark, array){
             const owner = mark
             let win = false 
@@ -172,6 +180,7 @@ const GameModule = (() => {
                         array[x][y+2].taken == owner){
                             win = true
                             if(win){
+                                BoardModule.updateBoardState(`Win`)
                                 alert(`${owner}'s wins!`)
                             }
                         } 
@@ -185,6 +194,7 @@ const GameModule = (() => {
                             array[x+2][y].taken === owner){
                                win = true
                                 if(win){
+                                    BoardModule.updateBoardState(`Win`)
                                     alert(`${owner}'s wins!`)
                                 }
                             }
@@ -197,6 +207,7 @@ const GameModule = (() => {
                                 array[x+2][y+2].taken === owner){
                                     win = true
                                     if(win){
+                                        BoardModule.updateBoardState(`Win`)
                                         alert("diagonal")
                                     }
                                 } else {
@@ -207,6 +218,7 @@ const GameModule = (() => {
                                                 array[x+2][y].taken === owner){
                                                    win = true
                                                     if(win){
+                                                        BoardModule.updateBoardState(`Win`)
                                                         alert("diagonal")
                                                     }
                                                 } else {
@@ -229,12 +241,21 @@ const GameModule = (() => {
                      });
                  });
                  if(count === 9){
+                    BoardModule.updateBoardState(`Tie!`)
                      alert("tie")
                  }
+                }
+                function removeEvent(){
+                    let cells = document.getElementsByClassName("cell")
+                    let cellarray = Array.from(cells)
+                    cellarray.forEach(cell => {
+                     cell.removeEventListener('click', GameModule.handleClick,false )
+                    })
                 }
       
     return {
         startGame,
+        
         applyEvent,
         players: createPlayers(),
         getActivePlayer,
@@ -243,6 +264,7 @@ const GameModule = (() => {
         updateTaken,
         checkWin,
         checkTie,
+        removeEvent
     }
 })();
 
