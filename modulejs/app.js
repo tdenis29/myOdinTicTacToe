@@ -2,11 +2,7 @@
 document.getElementById('startgame').addEventListener('click', e => {
     GameModule.startGame();
 })
-document.getElementById('divContainer').addEventListener('click', function(e) {
-    e.stopPropagation();
-    GameModule.handleClick(e)
 
-})
 
 
 

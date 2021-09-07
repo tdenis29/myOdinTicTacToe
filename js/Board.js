@@ -4,40 +4,40 @@
 //square objects can have three states, "null", "X", "0", 
 //will need method to update states 
 // we will check for win by checking the states at each Square Object in the array
-const squareFactory = (_id, _taken) => {
-    let thisSquareTaken = () => _taken
-    const thisSquareId = () => _id
+const squareFactory = (id, taken) => {
+    "use strict";
 
-    const updateTaken = function updateTaken(mark){
-        _taken = mark
-    }
+    
     const drawhtmlSquares = function htmlSquares(){
         const newDiv = document.createElement('div')
         newDiv.classList.add('cell')
-        newDiv.setAttribute('id', _id)
+        newDiv.setAttribute('id', id)
         const divContainer = document.getElementById('divContainer')
         divContainer.insertBefore(newDiv, null)
     }
     return {
-        thisSquareTaken,
-        thisSquareId,
-        updateTaken,
+        taken,
+        id,
         drawhtmlSquares
     }
 }
 //PLayer Factory will  assign player Objects X or O and name and active state = boolean
-const playerFactory = (_name,_mark, _active) => {
+const playerFactory = (_name,_mark, active) => {
     'use strict';
     const getName = () => _name;
     const getMark = () => _mark;
-    const getActive = () => _active
+
 
     return {
         getName,
         getMark,
-        getActive
+        active
     }
-}          
+}       
+
+// for(let player of GameModule.players){
+//     player.active = player.active === true ? false : true;
+// }
 ///Board Module will have three states "playing", "X's Win", "O win", "Tie"
 // we will use these states to update the visual aspect of the game board 
 //Board will create array of square objects
@@ -46,20 +46,28 @@ const playerFactory = (_name,_mark, _active) => {
 const BoardModule = (() => {
     "use strict";
     let _boardState = null;
-   
+    let  _columns = 3;
+    let _rows = 3
+
     function createSpaces() {
-        let squares = [];
-        for(let i = 0; i < 9; i++){
-            let square = squareFactory(i, null)
-            squares.push(square)
+        let spaces = [];
+        for(let x=0; x < _columns; x++){
+            const column = [];
+            for(let y=0; y < _rows; y++){
+                let space = squareFactory(`${x}${y}`, null)
+                column.push(space);
+            }
+            spaces.push(column);
         }
-        return squares
+        return spaces
     };
-    function drawHTMLBoard(i){
-        for(let square of this.squares){
-            square.drawhtmlSquares()
+    function drawHTMLBoard() {
+        for(let column of this.squares){
+            for(let space of column){
+                space.drawhtmlSquares();
+            }
         }
-    }
+   }
     function getBoardState(){
         return _boardState
     }
@@ -68,12 +76,15 @@ const BoardModule = (() => {
       return _boardState
         
     }
+    //curry function to pass to event listener and get event plus this binding and ability to remove event listners
+   
 
         return {
             squares: createSpaces(),
             drawHTMLBoard,
             getBoardState,
-            updateBoardState
+            updateBoardState,
+            
         }
 })()
 
@@ -90,32 +101,131 @@ const GameModule = (() => {
         if(state === null){
             BoardModule.drawHTMLBoard()
             BoardModule.updateBoardState("Playing")
+            applyEvent();
         } else {
             return
         }
+    }
+    function applyEvent(){
+       let cells = document.getElementsByClassName("cell")
+       let cellarray = Array.from(cells)
+       cellarray.forEach(cell => {
+        cell.addEventListener('click', GameModule.handleClick,false )
+       })
     }
     function createPlayers(){
         const players = [];
         let player1 = playerFactory('Player1',"X",true)
         players.push(player1);
-        let player2 = playerFactory('Player2',"O");
+        let player2 = playerFactory('Player2',"O", false);
         players.push(player2);
         return players
        }
-
        function getActivePlayer(){
-        for(let player of this.players){
-            if(player.getActive() === true){
-                return player
+        return GameModule.players.find(player => player.active);
+       }
+       function switchTurns(){
+        for(let player of GameModule.players){
+            player.active = player.active === true ? false : true;
+        }
+       }
+       function updateTaken(id,mark, array){
+        for (let i of array) {
+            for (let j of i) {
+              if(j.id == id){
+                  j.taken = mark
+              }
             }
-        } return player
-}
+          }
+        }
+       const handleClick = function (e) {
+        e.stopPropagation();
+        if(e.target.classList.contains("cell") && e.target.innerText === ""){
+            let array = BoardModule.squares;
+            let playerActive = getActivePlayer()
+            let mark = playerActive.getMark()
+            let cell = e.target
+            let id = cell.id
+            cell.innerText = mark
+            updateTaken(id,mark,array)
+            switchTurns()
+            checkWin(mark, array)
+  
+        }
+    }
+
+        //horizontal win x is column and y is set to -2 which evaluates to zero each pass to check = [0][0], [1][0], [2][0]
+        function checkWin(mark, array){
+            const owner = mark
+            let win = false
+            //horizontal win x is column and y is set to -2 which evaluates to zero each pass to check = [0][0], [1][0], [2][0]
+            for (let x = 0; x < array.length; x++ ){
+                for (let y = 0; y < array.length - 2; y++){
+                    if (array[x][y].taken == owner && 
+                        array[x][y+1].taken == owner && 
+                        array[x][y+2].taken == owner){
+                            win = true
+                            if(win){
+                                alert(`${owner}'s wins!`)
+                            }
+                        } 
+                    }
+                }
+                 //vertical win x is column and x is set to -2 which evaluates to zero each pass to check = [0][0], [0][1], [0][2]
+                for (let x = 0; x < array.length -2; x++ ){
+                    for (let y = 0; y < array.length; y++){
+                        if (array[x][y].taken === owner && 
+                            array[x+1][y].taken === owner && 
+                            array[x+2][y].taken === owner){
+                                win = true
+                                if(win){
+                                    alert(`${owner}'s wins!`)
+                                   
+                                }
+                            }
+                        }
+                    }
+                    //diagonal win 
+                    for (let x = 0; x < array.length; x++ ){
+                        for (let y = 0; y < array.length; y++){
+                            console.log(x,y)
+                            if (array[x][y].taken === owner && 
+                                array[x+1][y+1].taken === owner && 
+                                array[x+2][y+2].taken === owner){
+                                    win = true
+                                    if(win){
+                                        alert("diagonal")
+                                    }
+                                } else {
+                                    for (let x = 0; x < array.length; x++ ){
+                                        for (let y = 0; y < array.length; y++){
+                                            if (array[x][y+2].taken === owner && 
+                                                array[x+1][y+1].taken === owner && 
+                                                array[x+2][y].taken === owner){
+                                                    win = true
+                                                    if(win){
+                                                        alert("diagonal")
+                                                    }
+                                                } else {
+                                                    return
+                                                }
+                                }
+
+                            }}
+                        }
+    }
         
+            return win 
+        }
     return {
         startGame,
+        applyEvent,
         players: createPlayers(),
         getActivePlayer,
+        switchTurns,
+        handleClick,
+        updateTaken,
+        checkWin
     }
-})()
-
+})();
 
