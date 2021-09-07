@@ -147,18 +147,24 @@ const GameModule = (() => {
             let cell = e.target
             let id = cell.id
             cell.innerText = mark
-            updateTaken(id,mark,array)
-            switchTurns()
-            checkWin(mark, array)
-  
-        }
-    }
+            
 
-        //horizontal win x is column and y is set to -2 which evaluates to zero each pass to check = [0][0], [1][0], [2][0]
+
+            updateTaken(id,mark, array)
+            switchTurns()
+            if(!checkWin(mark, array)){
+                checkTie(array)
+            } else {
+                checkWin(mark,array)
+            }
+        
+        }
+    }   
+     
         function checkWin(mark, array){
             const owner = mark
-            let win = false
-            //horizontal win x is column and y is set to -2 which evaluates to zero each pass to check = [0][0], [1][0], [2][0]
+            let win = false 
+            //horizontal win x is column and y is set to -2 which evaluates to zero each pass to check = [0][0], [1][0], [2]
             for (let x = 0; x < array.length; x++ ){
                 for (let y = 0; y < array.length - 2; y++){
                     if (array[x][y].taken == owner && 
@@ -177,18 +183,15 @@ const GameModule = (() => {
                         if (array[x][y].taken === owner && 
                             array[x+1][y].taken === owner && 
                             array[x+2][y].taken === owner){
-                                win = true
+                               win = true
                                 if(win){
                                     alert(`${owner}'s wins!`)
-                                   
                                 }
                             }
                         }
-                    }
-                    //diagonal win 
+                }
                     for (let x = 0; x < array.length; x++ ){
                         for (let y = 0; y < array.length; y++){
-                            console.log(x,y)
                             if (array[x][y].taken === owner && 
                                 array[x+1][y+1].taken === owner && 
                                 array[x+2][y+2].taken === owner){
@@ -202,21 +205,34 @@ const GameModule = (() => {
                                             if (array[x][y+2].taken === owner && 
                                                 array[x+1][y+1].taken === owner && 
                                                 array[x+2][y].taken === owner){
-                                                    win = true
+                                                   win = true
                                                     if(win){
                                                         alert("diagonal")
                                                     }
                                                 } else {
                                                     return
                                                 }
+                                    }
                                 }
-
-                            }}
+                            }
                         }
-    }
-        
-            return win 
-        }
+                    }
+                    return win 
+                }
+                function checkTie(array){
+                    let count = 0;
+                 array.forEach((e) => {
+                     e.forEach((obj) => {
+                         if(obj.taken){
+                             count++
+                         }
+                     });
+                 });
+                 if(count === 9){
+                     alert("tie")
+                 }
+                }
+      
     return {
         startGame,
         applyEvent,
@@ -225,7 +241,8 @@ const GameModule = (() => {
         switchTurns,
         handleClick,
         updateTaken,
-        checkWin
+        checkWin,
+        checkTie,
     }
 })();
 
