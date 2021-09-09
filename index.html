@@ -8,12 +8,15 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="gameHeader">
-        <h1>Hello World!</h1> 
-        <button id="restart" onclick="location.reload()">Restart</button>
-        <button id="startgame">Start</button>
-        <h2></h2>
-    </div>
+    <header class="gameHeader">
+        <h1>The Odin Tic Tac Toe</h1> 
+        <div class="button-container">
+            <button id="startgame">Start</button>
+
+            <button id="restart" onclick="BoardModule.myRestart()">Restart</button>
+        </div>
+        
+    </header>
         <div class="gameboardDiv" id="divContainer">
 
         </div>

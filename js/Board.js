@@ -76,18 +76,30 @@ const BoardModule = (() => {
       return _boardState
         
     }
-    //curry function to pass to event listener and get event plus this binding and ability to remove event listners
-   
+    function markHTML(mark, cell){
+       let playerMark = document.createElement("p");
+       let playerNode = document.createTextNode(mark);
+       playerMark.appendChild(playerNode);
+       playerMark.classList.add("mark")
+       cell.appendChild(playerMark)
+
+    }
+    function myRestart() {
+        if(getBoardState()=== null || getBoardState() === "Win" || getBoardState()=== "tie"){
+        location.reload()
+    }
+}
 
         return {
             squares: createSpaces(),
             drawHTMLBoard,
             getBoardState,
             updateBoardState,
+            markHTML,
+            myRestart
             
         }
 })()
-
 //Game Module 
 //will handle create instance of board
 //keep track of turn 
@@ -106,12 +118,13 @@ const GameModule = (() => {
             return
         }
     }
-    // function resetGame(){
-    //     let state = BoardModule.getBoardState()
-    //     if(state == "Win" || state == "Tie"){
-    //        window.location.reload()
-    //     }
-    // }
+    function resetGame(){
+        let state = BoardModule.getBoardState()
+        if(state == "Win" || state == "Tie"){
+           window.location.reload()
+           startGame()
+        }
+    }
     function applyEvent(){
        let cells = document.getElementsByClassName("cell")
        let cellarray = Array.from(cells)
@@ -153,7 +166,8 @@ const GameModule = (() => {
                 let mark = playerActive.getMark()
                 let cell = e.target
                 let id = cell.id
-                cell.innerText = mark
+                BoardModule.markHTML(mark, cell)
+                // cell.innerText = mark
         
                 updateTaken(id,mark, array)
                 switchTurns()
@@ -162,7 +176,7 @@ const GameModule = (() => {
                 } 
             
                 if(BoardModule.getBoardState() === "Win" || BoardModule.getBoardState() === "Tie"){
-                        removeEvent()
+                        removeEvent();
                     }
             
                 }
@@ -209,6 +223,7 @@ const GameModule = (() => {
                                     if(win){
                                         BoardModule.updateBoardState(`Win`)
                                         alert("diagonal")
+                                        break;
                                     }
                                 } else {
                                     for (let x = 0; x < array.length; x++ ){
@@ -220,6 +235,7 @@ const GameModule = (() => {
                                                     if(win){
                                                         BoardModule.updateBoardState(`Win`)
                                                         alert("diagonal")
+                                                        break;
                                                     }
                                                 } else {
                                                     return
@@ -232,6 +248,7 @@ const GameModule = (() => {
                     return win 
                 }
                 function checkTie(array){
+                    if(BoardModule.getBoardState() === "Playing"){
                     let count = 0;
                  array.forEach((e) => {
                      e.forEach((obj) => {
@@ -244,6 +261,9 @@ const GameModule = (() => {
                     BoardModule.updateBoardState(`Tie!`)
                      alert("tie")
                  }
+                } else {
+                    return 
+                }
                 }
                 function removeEvent(){
                     let cells = document.getElementsByClassName("cell")
@@ -255,7 +275,7 @@ const GameModule = (() => {
       
     return {
         startGame,
-        
+        resetGame,
         applyEvent,
         players: createPlayers(),
         getActivePlayer,

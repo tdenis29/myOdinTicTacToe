@@ -1,20 +1,75 @@
+*{
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    box-sizing: border-box;
+}
+body{
+    height: 100%;
+    width: 100%;
+    background-color: #001011;
+}
+header{
+    margin: 3rem 0;
+}
 h1{
     text-align: center;
+    color: #FF499E;
+}
+.button-container{
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+#startgame{
+    color: #FFF;
+    background-color: #149911;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    border: solid 2px #149911;
+    display: inline-block;
+    font-size: 18px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+#restart{
+    color: #fff;
+    background-color: #5FBFF9;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    border: solid 2px #5FBFF9;
+    display: inline-block;
+    font-size: 18px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
 }
 .gameboardDiv{
-    width: 75%;
+    width:20rem;
     margin: 0 auto;
-    height: 600px;
+    height: 20rem;
     display: grid;
     grid-gap: 10px;
     grid-template-columns: repeat(3, 1fr);
+    /* justify-content: center;
+    align-items: center;*/
 }
 .cell{
-    background-color: aqua;
+    background-color: #FF499E;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 .mark{
     height: 100%;
     width: 100%;
     font-size: 44px;
     text-align: center;
+    position: absolute;
+    top: 25%;
 }
