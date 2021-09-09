@@ -22,7 +22,7 @@ const squareFactory = (id, taken) => {
     }
 }
 //PLayer Factory will  assign player Objects X or O and name and active state = boolean
-const playerFactory = (_name,_mark, active) => {
+const playerFactory = (_name,_mark, active, ai) => {
     'use strict';
     const getName = () => _name;
     const getMark = () => _mark;
@@ -31,18 +31,18 @@ const playerFactory = (_name,_mark, active) => {
     return {
         getName,
         getMark,
-        active
+        active,
+        ai
     }
 }       
 
 // for(let player of GameModule.players){
 //     player.active = player.active === true ? false : true;
 // }
-///Board Module will have three states "playing", "X's Win", "O win", "Tie"
+///Board Module will have three states "playing", "Win", "Tie"
 // we will use these states to update the visual aspect of the game board 
 //Board will create array of square objects
-// let origBoard = Array.from(new Array(9).keys())
-// console.log(origBoard)
+
 const BoardModule = (() => {
     "use strict";
     let _boardState = null;
@@ -77,13 +77,16 @@ const BoardModule = (() => {
         
     }
     function markHTML(mark, cell){
+       if(cell.taken == null){
        let playerMark = document.createElement("p");
        let playerNode = document.createTextNode(mark);
        playerMark.appendChild(playerNode);
        playerMark.classList.add("mark")
        cell.appendChild(playerMark)
-
+    } else{
+        return 
     }
+}
     function myRestart() {
         if(getBoardState()=== null || getBoardState() === "Win" || getBoardState()=== "tie"){
         location.reload()
@@ -134,9 +137,9 @@ const GameModule = (() => {
     }
     function createPlayers(){
         const players = [];
-        let player1 = playerFactory('Player1',"X",true)
+        let player1 = playerFactory('Player1',"X",true,false)
         players.push(player1);
-        let player2 = playerFactory('Player2',"O", false);
+        let player2 = playerFactory('Player2',"O", false, true);
         players.push(player2);
         return players
        }
@@ -157,32 +160,37 @@ const GameModule = (() => {
             }
           }
         }
-       const handleClick = function (e) {
-        if(BoardModule.getBoardState() === "Playing"){
-        e.stopPropagation();
-            if(e.target.classList.contains("cell") && e.target.innerText === ""){
-                let array = BoardModule.squares;
-                let playerActive = getActivePlayer()
-                let mark = playerActive.getMark()
-                let cell = e.target
-                let id = cell.id
-                BoardModule.markHTML(mark, cell)
-                // cell.innerText = mark
-        
-                updateTaken(id,mark, array)
-                switchTurns()
-                if(!checkWin(mark, array)){
-                    checkTie(array)
-                } 
-            
-                if(BoardModule.getBoardState() === "Win" || BoardModule.getBoardState() === "Tie"){
-                        removeEvent();
-                    }
-            
-                }
-        
-            } 
+        const aiTakeTurn = function (cell){
+            if(BoardModule.getBoardState() === "Playing"){
+            let playerActive = getActivePlayer()
+            takeTurn(cell, playerActive)
+        }
     }
+       const handleClick = function (e) {
+           let playerActive = getActivePlayer()
+           takeTurn(e.target, playerActive)
+       }
+    
+        function takeTurn(cell, playerActive) { 
+            let array = BoardModule.squares
+            let id = cell.id
+            let mark = playerActive.getMark()
+            BoardModule.markHTML(mark, cell)
+            updateTaken(id, mark, array)           
+            if(!checkWin(mark, array)){
+                checkTie(array)
+            } 
+            switchTurns()
+         
+            if(getActivePlayer().ai === true){
+                aiTakeTurn(aiModule.bestSpot());
+            }
+            if(BoardModule.getBoardState() === "Win"){
+                    removeEvent();
+                }
+            
+           
+       }
         function checkWin(mark, array){
             const owner = mark
             let win = false 
@@ -195,7 +203,8 @@ const GameModule = (() => {
                             win = true
                             if(win){
                                 BoardModule.updateBoardState(`Win`)
-                                alert(`${owner}'s wins!`)
+                                alert(`${owner}'s wins!`) /// update board and highlight
+                                break
                             }
                         } 
                     }
@@ -210,6 +219,7 @@ const GameModule = (() => {
                                 if(win){
                                     BoardModule.updateBoardState(`Win`)
                                     alert(`${owner}'s wins!`)
+                                    break
                                 }
                             }
                         }
@@ -288,3 +298,29 @@ const GameModule = (() => {
     }
 })();
 
+const aiModule = (() => {
+    function bestSpot(){
+        let computed = _emptySquares()[0];
+        let html = document.getElementsByClassName('cell');
+        let htmlArray = Array.from(html)
+         let result = htmlArray.filter(cell=> cell.id === computed.id)
+         let removed = result.pop()
+         return removed
+    }
+    function _emptySquares(){
+        let empty = [];
+        for (let i of BoardModule.squares) {
+            for (let j of i) {
+              if(!j.taken){
+                  empty.push(j)
+              }
+            }
+          }
+          return empty
+    }
+
+    return{
+        bestSpot,
+
+    }
+})();
