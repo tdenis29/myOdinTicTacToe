@@ -1,4 +1,7 @@
 "use strict";
+//Work in progress. Adding display controls and character selection inputs.As well as ability to choose between Ai and human players.
+
+
 //square factory will set up the square Objects
 //stored single dimensional array on Board object
 //square objects can have three states, "null", "X", "0", 
@@ -303,7 +306,7 @@ const aiModule = (() => {
         let computed = _emptySquares()[0];
         let html = document.getElementsByClassName('cell');
         let htmlArray = Array.from(html)
-         let result = htmlArray.filter(cell=> cell.id === computed.id)
+         let result = htmlArray.filter(cell => cell.id === computed.id)
          let removed = result.pop()
          return removed
     }
