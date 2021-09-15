@@ -189,7 +189,12 @@ const GameModule = (() => {
             setTimeout(() => {
                 aiTakeTurn(aiModule.bestSpot());
               }, 1000);
-        }
+        } else if (getActivePlayer().ai === true){
+            document.getElementById('startgame').click()
+            setTimeout(() => {
+                aiTakeTurn(aiModule.bestSpot());
+              }, 1000);
+        } 
     }
         
        function getActivePlayer(){
