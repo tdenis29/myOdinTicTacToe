@@ -79,6 +79,8 @@ const BoardModule = (() => {
     function updateBoardState(state){
       _boardState = state;
       return _boardState
+    }
+    function replacePlayerInput(){
         
     }
 
@@ -184,7 +186,9 @@ const GameModule = (() => {
         players.push(player2)
         if(GameModule.players[0].ai === true && GameModule.players[1].ai === true){
             document.getElementById('startgame').click()
-            aiTakeTurn(aiModule.bestSpot())
+            setTimeout(() => {
+                aiTakeTurn(aiModule.bestSpot());
+              }, 1000);
         }
     }
         
@@ -233,7 +237,9 @@ const GameModule = (() => {
             switchTurns()
          
             if(getActivePlayer().ai === true){
-                aiTakeTurn(aiModule.bestSpot());
+                setTimeout(() => {
+                    aiTakeTurn(aiModule.bestSpot());
+                  }, 1000);
             }
             if(BoardModule.getBoardState() === "Win"){
                     removeEvent();
@@ -280,7 +286,7 @@ const GameModule = (() => {
                                     win = true
                                     if(win){
                                         BoardModule.updateBoardState(`Win`)
-                                        alert("diagonal")
+                                        document.getElementById("winner").textContent = `${owner}'s wins!`
                                         break;
                                     }
                                 } else {
@@ -292,7 +298,7 @@ const GameModule = (() => {
                                                    win = true
                                                     if(win){
                                                         BoardModule.updateBoardState(`Win`)
-                                                        alert("diagonal")
+                                                        document.getElementById("winner").textContent = `${owner}'s wins!`
                                                         break;
                                                     }
                                                 } else {

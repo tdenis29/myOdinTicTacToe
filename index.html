@@ -22,31 +22,32 @@
         </div>
         <h2 id="winner"></h2>
     </header>
+    <div class="game">
+        <div class="playerinputs1">
 
-    <div class="playerinputs1">
+            <div class="textinput">
+                <label for="playerName">Player Name?</label>
+                <input type="text" id="playerName1" required aria-required="true" placeholder="Player1">
+            </div>
 
-        <div class="textinput">
-            <label for="playerName">Player Name?</label>
-            <input type="text" id="playerName1" required aria-required="true" placeholder="Player1">
+            <div class="textinput">
+                <label for="markMenu1">X or O?</label>
+                <select id="markMenu1">
+                    <option id="X1" value="X">X</option>
+                    <option id="O1" value="O">0</option>
+                </select>
+            </div>
+
+            <div class="textinput">
+                <label for="aiMenu1">AI or Human?</label>
+                <select id="aiMenu1" name="state-select">
+                    <option value="true">Ai</option>
+                    <option value="false">Human</option>
+                </select>
+            </div>
+            <button class="createPlayer1" id="createPlayer1">Create Player</button>
         </div>
-
-        <div class="textinput">
-            <label for="markMenu1">X or O?</label>
-            <select id="markMenu1">
-                <option id="X1" value="X">X</option>
-                <option id="O1" value="O">0</option>
-            </select>
-        </div>
-
-        <div class="textinput">
-            <label for="aiMenu1">AI or Human?</label>
-            <select id="aiMenu1" name="state-select">
-                <option value="true">Ai</option>
-                <option value="false">Human</option>
-            </select>
-        </div>
-        <button class="createPlayer1" id="createPlayer1">Create Player</button>
-    </div>
+ 
 
 
     <!-- <div class="game">
@@ -61,7 +62,6 @@
     </div>
 
     <div class="playerinputs2">
-
         <div class="textinput">
             <label for="playerName">Player Name?</label>
             <input type="text" id="playerName2" required aria-required="true" placeholder="Player2">
@@ -84,7 +84,7 @@
         </div>
         <button class="createPlayer2" id="createPlayer2">Create Player</button>
     </div>
-
+<
 
     <!-- <div class="player2disp">
                 <h2 id="player2-title">Player2</h2>
