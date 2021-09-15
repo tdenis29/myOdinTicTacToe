@@ -1,7 +1,5 @@
 "use strict";
 //Work in progress. Adding display controls and character selection inputs.As well as ability to choose between Ai and human players.
-
-
 //square factory will set up the square Objects
 //stored single dimensional array on Board object
 //square objects can have three states, "null", "X", "0", 
@@ -9,7 +7,13 @@
 // we will check for win by checking the states at each Square Object in the array
 const squareFactory = (id, taken) => {
     "use strict";
-
+    const drawSelf = function (mark, cell) {
+        let playerMark = document.createElement("p");
+        let playerNode = document.createTextNode(mark);
+        playerMark.appendChild(playerNode);
+        playerMark.classList.add("mark")
+        cell.appendChild(playerMark)
+    }
     
     const drawhtmlSquares = function htmlSquares(){
         const newDiv = document.createElement('div')
@@ -21,7 +25,8 @@ const squareFactory = (id, taken) => {
     return {
         taken,
         id,
-        drawhtmlSquares
+        drawhtmlSquares,
+        drawSelf
     }
 }
 //PLayer Factory will  assign player Objects X or O and name and active state = boolean
@@ -39,9 +44,6 @@ const playerFactory = (_name,_mark, active, ai) => {
     }
 }       
 
-// for(let player of GameModule.players){
-//     player.active = player.active === true ? false : true;
-// }
 ///Board Module will have three states "playing", "Win", "Tie"
 // we will use these states to update the visual aspect of the game board 
 //Board will create array of square objects
@@ -79,17 +81,7 @@ const BoardModule = (() => {
       return _boardState
         
     }
-    function markHTML(mark, cell){
-       if(cell.taken == null){
-       let playerMark = document.createElement("p");
-       let playerNode = document.createTextNode(mark);
-       playerMark.appendChild(playerNode);
-       playerMark.classList.add("mark")
-       cell.appendChild(playerMark)
-    } else{
-        return 
-    }
-}
+
     function myRestart() {
         if(getBoardState()=== null || getBoardState() === "Win" || getBoardState()=== "tie"){
         location.reload()
@@ -101,7 +93,6 @@ const BoardModule = (() => {
             drawHTMLBoard,
             getBoardState,
             updateBoardState,
-            markHTML,
             myRestart
             
         }
@@ -113,6 +104,8 @@ const BoardModule = (() => {
 //validate move
 //identify winner  
 const GameModule = (() => {
+
+    const players = [];
 
     function startGame(){
         let state = BoardModule.getBoardState()
@@ -138,14 +131,63 @@ const GameModule = (() => {
         cell.addEventListener('click', GameModule.handleClick,false )
        })
     }
-    function createPlayers(){
-        const players = [];
-        let player1 = playerFactory('Player1',"X",true,false)
-        players.push(player1);
-        let player2 = playerFactory('Player2',"O", false, true);
-        players.push(player2);
-        return players
-       }
+
+    function getPlayer1 () {
+        let name = document.getElementById("playerName1").value
+        let mark = document.getElementById("markMenu1").value
+        let active = false
+        let ai = document.getElementById("aiMenu1").value
+
+        if(name === null || name === ""){
+            name = `Player ${mark}`
+        }
+        if(mark === "X"){
+         document.getElementById('X2').disabled = true;
+         document.getElementById('O2').selected = true;
+         active = true
+        } else{
+         document.getElementById('O2').disabled = true;
+         document.getElementById('X2').selected = true;
+        }
+        if(ai === "false"){
+            ai = false
+        } else {
+            ai = true
+        }
+        let player1 = playerFactory(name,mark,active, ai)
+        players.push(player1)
+    }
+
+    function getPlayer2 () {
+        let name = document.getElementById("playerName2").value
+        let mark = document.getElementById("markMenu2").value
+        let active = false
+        let ai = document.getElementById("aiMenu2").value
+
+        if(name === null || name === ""){
+            name = `Player ${mark}`
+        }
+        if(mark === "X"){
+         document.getElementById('X2').disabled = true;
+         document.getElementById('O2').selected = true;
+         active = true
+        } else{
+         document.getElementById('O2').disabled = true;
+         document.getElementById('X2').selected = true;
+        }
+        if(ai === "false"){
+            ai = false
+        } else {
+            ai = true
+        }
+        let player2 = playerFactory(name,mark,active, ai)
+        players.push(player2)
+        if(GameModule.players[0].ai === true && GameModule.players[1].ai === true){
+            document.getElementById('startgame').click()
+            aiTakeTurn(aiModule.bestSpot())
+        }
+    }
+        
        function getActivePlayer(){
         return GameModule.players.find(player => player.active);
        }
@@ -154,11 +196,12 @@ const GameModule = (() => {
             player.active = player.active === true ? false : true;
         }
        }
-       function updateTaken(id,mark, array){
+       function updateTaken(id,mark, array, cell){
         for (let i of array) {
             for (let j of i) {
               if(j.id == id){
                   j.taken = mark
+                  j.drawSelf(mark, cell)
               }
             }
           }
@@ -169,17 +212,21 @@ const GameModule = (() => {
             takeTurn(cell, playerActive)
         }
     }
+     
        const handleClick = function (e) {
            let playerActive = getActivePlayer()
+           if(!e.target.firstChild && getActivePlayer().ai == false){
            takeTurn(e.target, playerActive)
+           } else {
+               return 
+           }
        }
-    
         function takeTurn(cell, playerActive) { 
             let array = BoardModule.squares
             let id = cell.id
             let mark = playerActive.getMark()
-            BoardModule.markHTML(mark, cell)
-            updateTaken(id, mark, array)           
+
+            updateTaken(id, mark, array, cell)           
             if(!checkWin(mark, array)){
                 checkTie(array)
             } 
@@ -191,8 +238,6 @@ const GameModule = (() => {
             if(BoardModule.getBoardState() === "Win"){
                     removeEvent();
                 }
-            
-           
        }
         function checkWin(mark, array){
             const owner = mark
@@ -206,8 +251,8 @@ const GameModule = (() => {
                             win = true
                             if(win){
                                 BoardModule.updateBoardState(`Win`)
-                                alert(`${owner}'s wins!`) /// update board and highlight
-                                break
+                                document.getElementById("winner").textContent = `${owner}'s wins!` /// update board and highlight
+                                break;
                             }
                         } 
                     }
@@ -221,8 +266,8 @@ const GameModule = (() => {
                                win = true
                                 if(win){
                                     BoardModule.updateBoardState(`Win`)
-                                    alert(`${owner}'s wins!`)
-                                    break
+                                    document.getElementById("winner").textContent = `${owner}'s wins!`
+                                    break;
                                 }
                             }
                         }
@@ -271,7 +316,7 @@ const GameModule = (() => {
                      });
                  });
                  if(count === 9){
-                    BoardModule.updateBoardState(`Tie!`)
+                    document.getElementById("winner").textContent = `TIE GAME`
                      alert("tie")
                  }
                 } else {
@@ -290,7 +335,9 @@ const GameModule = (() => {
         startGame,
         resetGame,
         applyEvent,
-        players: createPlayers(),
+        getPlayer1,
+        getPlayer2,
+        players,
         getActivePlayer,
         switchTurns,
         handleClick,

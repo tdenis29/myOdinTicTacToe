@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,39 +8,93 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header class="gameHeader">
         <h1>The Odin Tic Tac Toe</h1> 
-        <p>Work in progress. Adding display controls and character selection inputs.As well as ability to choose between Ai and human players.</p>
-       
+        <p>Work in progress. Adding display controls and character selection inputs.As well as ability to choose between
+            Ai and human players.</p>
+
         <div class="button-container">
             <button id="startgame">Start</button>
-
             <button id="restart" onclick="BoardModule.myRestart()">Restart</button>
 
-             <!-- <select>
-                <option value="0">Easy</option>
-                <option value="1">Medium</option>
-                <option value="2">Hard</option>
-                <option value="3">Tic Tac Oh</option>
-             </select> -->
         </div>
-        
+        <h2 id="winner"></h2>
     </header>
-        <div class="gameboardDiv" id="divContainer">
 
+    <div class="playerinputs1">
+
+        <div class="textinput">
+            <label for="playerName">Player Name?</label>
+            <input type="text" id="playerName1" required aria-required="true" placeholder="Player1">
         </div>
-    <!-- <script src="classjs/Game.js"></script>
-    <script src="classjs/Board.js"></script>
-    <script src="classjs/Player.js"></script>   
-    <script src="classjs/Square.js"></script>
-    <script src="classjs/app.js"></script> -->
-    
-    <!-- <script src="modulejs/Board.js"></script>
-    <script src="modulejs/app.js"></script> -->
 
+        <div class="textinput">
+            <label for="markMenu1">X or O?</label>
+            <select id="markMenu1">
+                <option id="X1" value="X">X</option>
+                <option id="O1" value="O">0</option>
+            </select>
+        </div>
+
+        <div class="textinput">
+            <label for="aiMenu1">AI or Human?</label>
+            <select id="aiMenu1" name="state-select">
+                <option value="true">Ai</option>
+                <option value="false">Human</option>
+            </select>
+        </div>
+        <button class="createPlayer1" id="createPlayer1">Create Player</button>
+    </div>
+
+
+    <!-- <div class="game">
+            <div class="player1disp">
+                <h2 id="player1-title">Player1</h2>
+                <p id="playermark">X</p>
+                <p id="Aidisplay">Bot</p>
+            </div> -->
+
+    <div class="gameboardDiv" id="divContainer">
+
+    </div>
+
+    <div class="playerinputs2">
+
+        <div class="textinput">
+            <label for="playerName">Player Name?</label>
+            <input type="text" id="playerName2" required aria-required="true" placeholder="Player2">
+        </div>
+
+        <div class="textinput">
+            <label for="markMenu2">X or O?</label>
+            <select id="markMenu2">
+                <option id="X2" value="X">X</option>
+                <option id="O2" value="O">0</option>
+            </select>
+        </div>
+
+        <div class="textinput">
+            <label for="aiMenu2">AI or Human?</label>
+            <select id="aiMenu2" name="state-select">
+                <option id="ai2true" value="true">Ai</option>
+                <option id="ai2false" value="false">Human</option>
+            </select>
+        </div>
+        <button class="createPlayer2" id="createPlayer2">Create Player</button>
+    </div>
+
+
+    <!-- <div class="player2disp">
+                <h2 id="player2-title">Player2</h2>
+                <p id="playermark">O</p>
+                <p id="Aidisplay">Bot</p>
+            </div> -->
+    </div>
     <script src="js/Board.js"></script>
     <script src="js/app.js"></script>
 
 </body>
+
 </html>

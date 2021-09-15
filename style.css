@@ -16,10 +16,15 @@ h1{
     text-align: center;
     color: #FF499E;
 }
+#winner{
+    text-align: center;
+    color: white;
+}
 .button-container{
     margin: 0 auto;
     display: flex;
     justify-content: center;
+    /* display: none; */
 }
 #startgame{
     color: #FFF;
@@ -33,6 +38,7 @@ h1{
     margin: 4px 2px;
     transition-duration: 0.4s;
     cursor: pointer;
+    
 }
 #restart{
     color: #fff;
@@ -47,15 +53,30 @@ h1{
     transition-duration: 0.4s;
     cursor: pointer;
 }
+.game{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* display: none; */
+}
+.player1disp, .player2disp{
+    width: 25%;
+    color: white;
+    text-align: center;
+    font-size: 44px;
+    border: solid 4px #FF499E;
+    margin: 0 2rem;
+}
+#playermark{
+    margin: 2rem 0;
+}
 .gameboardDiv{
     width:20rem;
-    margin: 0 auto;
     height: 20rem;
     display: grid;
     grid-gap: 10px;
     grid-template-columns: repeat(3, 1fr);
-    /* justify-content: center;
-    align-items: center;*/
+    
 }
 .cell{
     background-color: #FF499E;
