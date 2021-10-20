@@ -176,12 +176,12 @@ const GameModule = (() => {
         if(GameModule.players[0].ai === true && GameModule.players[1].ai === true){
             document.getElementById('startgame').click()
             setTimeout(() => {
-                aiTakeTurn(aiModule.bestSpot(BoardModule.squares, getActivePlayer()));
+                aiTakeTurn(aiModule.bestSpot( getActivePlayer(),BoardModule.squares));
               }, 1000);
         } else if (getActivePlayer().ai === true){
             document.getElementById('startgame').click()
             setTimeout(() => {
-                aiTakeTurn(aiModule.bestSpot(BoardModule.squares, getActivePlayer()));
+                aiTakeTurn(aiModule.bestSpot(getActivePlayer(),BoardModule.squares));
               }, 1000);
         } 
     }
