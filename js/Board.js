@@ -1,12 +1,7 @@
 "use strict";
-//Work in progress. Adding display controls and character selection inputs.As well as ability to choose between Ai and human players.
-//square factory will set up the square Objects
-//stored single dimensional array on Board object
-//square objects can have three states, "null", "X", "0", 
-//will need method to update states 
-// we will check for win by checking the states at each Square Object in the array
+console.log(aiModule._emptySquares)
 
-//PLayer Factory will  assign player Objects X or O and name and active state = boolean
+//Player Factory will  assign player Objects X or O and name and active state = boolean
 const playerFactory = (_name,_mark, active, ai) => {
     'use strict';
     const getName = () => _name;
@@ -222,15 +217,12 @@ const GameModule = (() => {
                return 
            }
        }
+    
         function takeTurn(cell, playerActive) { 
             let array = BoardModule.squares
-            let mark = playerActive.getMark()
-          
-            
+            let mark = playerActive.getMark()  
             BoardModule.drawSelf(mark, cell) 
             updateArray(mark, cell, array)
-
-          
             if(!checkWin(mark, array)){
                 checkTie(array)
             } 
@@ -321,9 +313,6 @@ const GameModule = (() => {
 
 const aiModule = (() => {
     function bestSpot(player, newBoard){
-    
-    
-    
         let availSpots = _emptySquares(newBoard);
      
 
