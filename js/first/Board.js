@@ -1,5 +1,5 @@
 "use strict";
-console.log(aiModule._emptySquares)
+
 
 //Player Factory will  assign player Objects X or O and name and active state = boolean
 const playerFactory = (_name,_mark, active, ai) => {
@@ -24,39 +24,16 @@ const BoardModule = (() => {
     "use strict";
     let _boardState = null;
     
-    const drawhtmlSquares = function htmlSquares(index){
-        const newDiv = document.createElement('button')
-        newDiv.classList.add('cell')
-        newDiv.setAttribute('id', index)
-        const divContainer = document.getElementById('divContainer')
-        divContainer.insertBefore(newDiv, null)
-    }
-    const drawSelf = function (mark, cell) {
-        console.log(cell)
+    let squares = [0,1,2,3,4,5,6,7,8];
+
+    function drawSelf (mark, cell) {
         let playerMark = document.createElement("p");
         let playerNode = document.createTextNode(mark);
         playerMark.appendChild(playerNode);
         playerMark.classList.add("mark")
         cell.appendChild(playerMark)
     }
-    function createSpaces() {
-        let spaces = [];
-        for(let x=0; x < 9; x++){
-            let space = x;
-            spaces.push(space);
-        }
-        return spaces
-    };
-    function drawHTMLBoard() {
-        let spaces = [];
-        for(let x=0; x < 9; x++){
-            let space = x;
-            spaces.push(space);
-        }
-        for(let i =0; i < spaces.length; i++){
-            drawhtmlSquares(spaces[i], i);
-        }
-   }
+
     function getBoardState(){
         return _boardState
     }
@@ -64,31 +41,19 @@ const BoardModule = (() => {
       _boardState = state;
       return _boardState
     }
- 
-
     function myRestart() {
         if(getBoardState()=== null || getBoardState() === "Win" || getBoardState()=== "tie"){
         location.reload()
     }
 }
-
         return {
-            squares: createSpaces(),
-            drawHTMLBoard,
+            squares,
             getBoardState,
             updateBoardState,
-            myRestart,
-            drawhtmlSquares,
             drawSelf
-            
         }
 })()
-//Game Module 
-//will handle create instance of board
-//keep track of turn 
-//making a omve on board 
-//validate move
-//identify winner  
+
 const GameModule = (() => {
 
     const players = [];
@@ -96,7 +61,6 @@ const GameModule = (() => {
     function startGame(){
         let state = BoardModule.getBoardState()
         if(state === null){
-            BoardModule.drawHTMLBoard()
             BoardModule.updateBoardState("Playing")
             applyEvent();
         } else {
@@ -106,10 +70,10 @@ const GameModule = (() => {
     function resetGame(){
         let state = BoardModule.getBoardState()
         if(state == "Win" || state == "Tie"){
-           window.location.reload()
            startGame()
         }
     }
+
     function applyEvent(){
        let cells = document.getElementsByClassName("cell")
        let cellarray = Array.from(cells)
@@ -168,17 +132,6 @@ const GameModule = (() => {
         }
         let player2 = playerFactory(name,mark,active, ai)
         players.push(player2)
-        if(GameModule.players[0].ai === true && GameModule.players[1].ai === true){
-            document.getElementById('startgame').click()
-            setTimeout(() => {
-                aiTakeTurn(aiModule.bestSpot( getActivePlayer(),BoardModule.squares));
-              }, 1000);
-        } else if (getActivePlayer().ai === true){
-            document.getElementById('startgame').click()
-            setTimeout(() => {
-                aiTakeTurn(aiModule.bestSpot(getActivePlayer(),BoardModule.squares));
-              }, 1000);
-        } 
     }
         
        function getActivePlayer(){
@@ -199,8 +152,18 @@ const GameModule = (() => {
             }
         }
        }
-    
-        const aiTakeTurn = function (space){
+    //    if(GameModule.players[0].ai === true && GameModule.players[1].ai === true){
+    //     document.getElementById('startgame').click()
+    //     setTimeout(() => {
+    //         aiTakeTurn(aiModule.bestSpot( getActivePlayer(),BoardModule.squares));
+    //       }, 1000);
+    // } else if (getActivePlayer().ai === true){
+    //     document.getElementById('startgame').click()
+    //     setTimeout(() => {
+    //         aiTakeTurn(aiModule.bestSpot(getActivePlayer(),BoardModule.squares));
+    //       }, 1000);
+    // } 
+        function aiTakeTurn (space){
             if(BoardModule.getBoardState() === "Playing"){
             let playerActive = getActivePlayer()
             let htmlArray = document.getElementsByClassName('cell')
@@ -208,8 +171,8 @@ const GameModule = (() => {
             takeTurn(thisHtml.find(square => space.index === Number(square.id)), playerActive)
         }
     }
-     
-       const handleClick = function (e) {
+
+       function handleClick (e) {
            let playerActive = getActivePlayer()
            if(!e.target.firstChild && getActivePlayer().ai == false){
            takeTurn(e.target, playerActive)
@@ -223,14 +186,19 @@ const GameModule = (() => {
             let mark = playerActive.getMark()  
             BoardModule.drawSelf(mark, cell) 
             updateArray(mark, cell, array)
-            if(!checkWin(mark, array)){
-                checkTie(array)
-            } 
+            
+            if(checkWin(mark, array)){
+                console.log(`${mark}` + " " + 'Wins')
+            } else if (checkTie(array)){
+                console.log(checkTie(array))
+            
+            }  
             switchTurns()
          
             if(getActivePlayer().ai === true){
                 setTimeout(() => {
                     aiTakeTurn(aiModule.bestSpot(getActivePlayer(),BoardModule.squares));
+                    console.log(aiModule.bestSpot(getActivePlayer(), BoardModule.squares))
                   }, 1000);
             }
             if(BoardModule.getBoardState() === "Win"){
@@ -238,7 +206,6 @@ const GameModule = (() => {
                 }
        }
 
-       
         function checkWin(mark, array){
             const owner = mark
             let win = false 
@@ -249,6 +216,7 @@ const GameModule = (() => {
                                 win = true
                             } else if (array[6] == mark && array[7] == mark && array[8] == mark){
                                 win = true; 
+                
                             }
                         }
                         for (let x = 0; x < array.length; x++ ){
@@ -258,40 +226,43 @@ const GameModule = (() => {
                                 win = true
                             } else if (array[2] == mark && array[5] == mark && array[8] == mark){
                                 win = true
+                          
                             }
                         }
                         for (let x = 0; x < array.length; x++ ){
                             if(array[6] == mark && array[4] == mark && array[2] == mark){
                                 win = true
-                             
-                    
                             } else if (array[8] == mark && array[4] == mark && array[0] == mark){
                                 win = true
                             }
                             }
                             return win 
                     }
-                    function checkTie( array){
-                        let tie;
-                        if(BoardModule.getBoardState() === "Playing"){
-                            let count = 0;
-                            for(let i = 0; i < array.length; i++){
-                                if([i].taken == !null){
-                                    count++;
-                                    tie = true;
-                                }
-                            } 
+            function checkTie( array){
+                let tie;
+                if(BoardModule.getBoardState() === "Playing"){
+                    let count = 0
+                    for(let i = 0; i < array.length; i++){
+                        if(array[i] === "X" || array[i] === "O"){
+                            count++
+                        }
+                    } 
+                    if(count === 9){
+                        tie = true
+                    } else {
+                        tie = false
                     }
-                    return tie
-                } 
+            }
+            return tie
+            } 
              
-                function removeEvent(){
-                    let cells = document.getElementsByClassName("cell")
-                    let cellarray = Array.from(cells)
-                    cellarray.forEach(cell => {
-                     cell.removeEventListener('click', GameModule.handleClick,false )
-                    })
-                }
+            function removeEvent(){
+                let cells = document.getElementsByClassName("cell")
+                let cellarray = Array.from(cells)
+                cellarray.forEach(cell => {
+                    cell.removeEventListener('click', GameModule.handleClick,false )
+                })
+            }
       
     return {
         startGame,
@@ -303,7 +274,6 @@ const GameModule = (() => {
         getActivePlayer,
         switchTurns,
         handleClick,
-      
         checkWin,
         checkTie,
         removeEvent,
