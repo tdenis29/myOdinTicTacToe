@@ -14,67 +14,65 @@
         <h1>The Odin Tic Tac Toe</h1> 
  
 
-        <div class="button-container">
-            <button id="startgame">Start</button>
+        <div class="top-button-container">
+            <button id="startgame" class="startGameButton">Start</button>
             <button id="restart" onclick="BoardModule.myRestart()">Restart</button>
 
         </div>
         <h2 id="winner"></h2>
     </header>
     <div class="game">
-        <div class="playerinputs1">
-
-            <div class="textinput">
-                <label for="playerName">Player Name?</label>
-                <input type="text" id="playerName1" required aria-required="true" placeholder="Player1">
-            </div>
-            <div class="selectContainer">
-            <div class="selectinput">
-                <label for="markMenu1">X or O?</label>
-                <select id="markMenu1">
-                    <option id="X1" value="X">X</option>
-                    <option id="O1" value="O">0</option>
-                </select>
-            </div>
-
-            <div class="selectinput">
-                <label for="aiMenu1">AI or Human?</label>
-                <select id="aiMenu1" name="state-select">
-                    <option value="true">Ai</option>
-                    <option value="false">Human</option>
-                </select>
-            </div>
-        </div>
-            <button class="createPlayer1" id="createPlayer1">Create Player</button>
-        </div>
         
-
-
-    <!-- <div class="game">√
-            <div class="player1disp">
-                <h2 id="player1-title">Player1</h2>
-                <p id="playermark">X</p>
-                <p id="Aidisplay">Bot</p>
-            </div> -->
+                <div class="formContainer">
+                    <div class="playerinputs1">
+                        <div class="textinput">
+                            <label for="playerName">Player Name?</label>
+                            <input type="text" id="playerName1" required aria-required="true" placeholder="Player1">
+                        </div>
+                    <div class="selectContainer">
+                        <div class="selectinput">
+                            <label for="markMenu1">X or O?</label>
+                            <select id="markMenu1">
+                                <option id="X1" value="X">X</option>
+                                <option id="O1" value="O">0</option>
+                            </select>
+                        </div>
+            
+                    <div class="selectinput">
+                            <label for="aiMenu1">AI or Human?</label>
+                            <select id="aiMenu1" name="state-select">
+                                <option value="true">Ai</option>
+                                <option value="false">Human</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="createPlayer1" id="createPlayer1">Create Player</button>
+                </div>
+                <div class="playerInfo" data-player="1">
+                        <p class="player1Name">Tyson</p>
+                        <p class="player1Mark">X</p>
+                        <p class="player1Type">Human</p>
+                   </div>
+                </div>
 
     <div class="gameboardDiv" id="divContainer">
-        <div class="cell" id="0"></div>
-        <div class="cell" id="1"></div>
-        <div class="cell" id="2"></div>
-        <div class="cell" id="3"></div>
-        <div class="cell" id="4"></div>
-        <div class="cell" id="5"></div>
-        <div class="cell" id="6"></div>
-        <div class="cell" id="7"></div>
-        <div class="cell" id="8"></div>
+        <button class="cell" id="0"></button>
+        <button class="cell" id="1"></button>
+        <button class="cell" id="2"></button>
+        <button class="cell" id="3"></button>
+        <button class="cell" id="4"></button>
+        <button class="cell" id="5"></button>
+        <button class="cell" id="6"></button>
+        <button class="cell" id="7"></button>
+        <button class="cell" id="8"></button>
     </div>
 
-    <div class="playerinputs2">
-        <div class="textinput">
-            <label for="playerName">Player Name?</label>
-            <input type="text" id="playerName2" required aria-required="true" placeholder="Player2">
-        </div>
-
+    <div class="formContainer">
+        <div class="playerinputs2">
+            <div class="textinput">
+                <label for="playerName">Player Name?</label>
+                <input type="text" id="playerName2" required aria-required="true" placeholder="Player2">
+            </div>
         <div class="selectContainer">
             <div class="selectinput">
                 <label for="markMenu2">X or O?</label>
@@ -83,17 +81,25 @@
                     <option id="O2" value="O">0</option>
                 </select>
             </div>
-            <div class="selectinput">
+
+        <div class="selectinput">
                 <label for="aiMenu2">AI or Human?</label>
                 <select id="aiMenu2" name="state-select">
-                    <option id="ai2true" value="true">Ai</option>
-                    <option id="ai2false" value="false">Human</option>
+                    <option value="true">Ai</option>
+                    <option value="false">Human</option>
                 </select>
             </div>
         </div>
-        <button class="createPlayer2" id="createPlayer2">Create Player</button>
+            <button class="createPlayer2" id="createPlayer2">Create Player</button>
         </div>
+        <div class="playerInfo" data-player="2">
+            <p class="player1Name">Tyson</p>
+            <p class="player1Mark">X</p>
+            <p class="player1Type">Human</p>
         </div>
+     
+    </div>
+
 
     <script src="js/first/Board.js"></script>
     <script src="js/first/app.js"></script>
