@@ -23,6 +23,7 @@ const BoardModule = (() => {
     let squares = [0,1,2,3,4,5,6,7,8];
 
     function drawSelf (mark, cell) {
+        console.log('i failed at drawSelf')
         let playerMark = document.createElement("p");
         let playerNode = document.createTextNode(mark);
         playerMark.appendChild(playerNode);
@@ -43,9 +44,10 @@ const BoardModule = (() => {
         console.log(info)
         form.classList.toggle("fade-out")
         info.classList.toggle("visible")
-        startGameButton.classList.toggle('visible')
+        startGameButton.classList.add('visible')
         
     }
+
     function fillInfo(){
 
     }
@@ -67,7 +69,7 @@ const GameModule = (() => {
         if(state === null){
             BoardModule.updateBoardState("Playing")
             applyEvent();
-        if(getActivePlayer().ai === true || getActivePlayer().ai && getNotActivePlayer().ai === true){
+        if(getActivePlayer().ai === true || getNotActivePlayer().ai === true){
                 document.getElementById('startgame').click()
                 aiTakeTurn(aiModule.bestSpot( getActivePlayer(),BoardModule.squares));
             }
@@ -90,60 +92,49 @@ const GameModule = (() => {
        })
     }
 
-    function getPlayer1 (e) {
-        let name = document.getElementById("playerName1").value
-        let mark = document.getElementById("markMenu1").value
-        let active = false
-        let ai = document.getElementById("aiMenu1").value
-
-        if(name === null || name === ""){
-            name = `Player ${mark}`
-        }
-        if(mark === "X"){
-         document.getElementById('X2').disabled = true;
-         document.getElementById('O2').selected = true;
-         active = true
-        } else{
-         document.getElementById('O2').disabled = true;
-         document.getElementById('X2').selected = true;
-        }
-        if(ai === "false"){
-            ai = false
-        } else {
-            ai = true
-        }
-        let player1 = playerFactory(name,mark,active, ai)
-        players.push(player1)
-        BoardModule.hidePlayerForm(e)
+    function getPlayer (e) {
+        let playerId = e.target.parentNode.dataset.player;
+        let playerNumber = parseInt(playerId)
+        let nameElement = `playerName${playerId}`
+        let markElement = `markMenu${playerId}`
+        let aiElement = `aiMenu${playerId}`
+            let name = document.getElementById(nameElement).value
+            let mark = document.getElementById(markElement).value
+            let active = false
+            let ai = document.getElementById(aiElement).value
+    
+            if(name === null || name === ""){
+                name = `Player ${mark}`
+            }
+            if(playerNumber === 1 && mark === "X"){
+             document.getElementById('X2').disabled = true;
+             document.getElementById('O2').selected = true;
+             active = true
+            } else if( playerNumber === 1 && mark === "0"){
+             document.getElementById('O2').disabled = true;
+             document.getElementById('X2').selected = true;
+             active = false
+            }
+            if(playerNumber === 2 && mark === "X"){
+                document.getElementById('X1').disabled = true;
+                document.getElementById('O1').selected = true;
+                active = true
+            } else if(playerNumber === 2 && mark === "O"){
+                document.getElementById('O1').disabled = true;
+                document.getElementById('X1').selected = true;
+                active = false
+            }
+            
+            if(ai === "false"){
+                ai = false
+            } else {
+                ai = true
+            }
+            let player = playerFactory(name,mark,active, ai)
+            players.push(player)
+            BoardModule.hidePlayerForm(e)
     }
-
-    function getPlayer2 (e) {
-        let name = document.getElementById("playerName2").value
-        let mark = document.getElementById("markMenu2").value
-        let active = false
-        let ai = document.getElementById("aiMenu2").value
-
-        if(name === null || name === ""){
-            name = `Player ${mark}`
-        }
-        if(mark === "X"){
-         document.getElementById('X2').disabled = true;
-         document.getElementById('O2').selected = true;
-         active = true
-        } else{
-         document.getElementById('O2').disabled = true;
-         document.getElementById('X2').selected = true;
-        }
-        if(ai === "false"){
-            ai = false
-        } else {
-            ai = true
-        }
-        let player2 = playerFactory(name,mark,active, ai)
-        players.push(player2)
-        BoardModule.hidePlayerForm(e)
-    }
-        
+   
        function getActivePlayer(){
         return GameModule.players.find(player => player.active);
        }
@@ -156,6 +147,7 @@ const GameModule = (() => {
         }
        }
        function updateArray(mark, cell, array){
+        console.log(array)
         for(let i = 0; i < array.length; i++){
             if(cell.id == i){
                 array[i] = mark;
@@ -168,41 +160,45 @@ const GameModule = (() => {
             let playerActive = getActivePlayer()
             let htmlArray = document.getElementsByClassName('cell')
             let thisHtml = Array.from(htmlArray)
-            takeTurn(thisHtml.find(square => space.index === Number(square.id)), playerActive)
+            let thisHtmlCell = thisHtml.find(square => space.index === Number(square.id))
+            takeTurn(thisHtmlCell, playerActive)
+        
+            
         }
     }
 
        function handleClick (e) {
+           let cell = e.target;
            let playerActive = getActivePlayer()
-           if(!e.target.firstChild && getActivePlayer().ai == false){
            takeTurn(e.target, playerActive)
-           } else {
-               return 
-           }
+           cell.removeEventListener('click', GameModule.handleClick)
+    
        }
     
         function takeTurn(cell, playerActive) { 
             let array = BoardModule.squares
-            let mark = playerActive.getMark()  
-            BoardModule.drawSelf(mark, cell) 
-            updateArray(mark, cell, array)
-            
-            if(checkWin(mark, array)){
-                console.log(`${mark}` + " " + 'Wins')
-            } else if (checkTie(array)){
-                console.log(checkTie(array))
-            
-            }  
-            switchTurns()
-         
-            if(getActivePlayer().ai === true){
-            setTimeout(() => {
-                aiTakeTurn(aiModule.bestSpot( getActivePlayer(),BoardModule.squares));
-              }, 1000);
-            }
-            if(BoardModule.getBoardState() === "Win"){
-                    removeEvent();
+            let mark = playerActive.getMark() 
+            if(checkTie(array) === false){
+
+                BoardModule.drawSelf(mark, cell)
+
+                updateArray(mark, cell, array)
+                
+                if(checkWin(mark, array)){
+                    console.log(`${mark}` + " " + 'Wins')
+                } else if (checkTie(array)){
+                    console.log("Cat's Game")
+                }  
+
+                switchTurns()
+             
+                if(getActivePlayer().ai === true){
+                    setTimeout(() => {
+                        aiTakeTurn(aiModule.bestSpot( getActivePlayer(),BoardModule.squares));
+                    }, 1000);
                 }
+            }
+
        }
 
         function checkWin(mark, array){
@@ -268,8 +264,7 @@ const GameModule = (() => {
         startGame,
         resetGame,
         applyEvent,
-        getPlayer1,
-        getPlayer2,
+        getPlayer,
         players,
         getActivePlayer,
         switchTurns,
@@ -285,7 +280,6 @@ const aiModule = (() => {
     function bestSpot(player, newBoard){
         let availSpots = _emptySquares(newBoard);
      
-
         if (GameModule.checkWin(GameModule.getNotActivePlayer().getMark(), newBoard)) {
           return {score: -10};
         } else if (GameModule.checkWin(GameModule.getActivePlayer().getMark(), newBoard)) {
@@ -332,9 +326,7 @@ const aiModule = (() => {
             }
           }
         }
-        
         return moves[bestMove]
-    
     }
 
     function _emptySquares(array){
@@ -352,3 +344,21 @@ const aiModule = (() => {
 
     }
 })();
+            // let array = BoardModule.squares
+            // let mark = playerActive.getMark()  
+            // BoardModule.drawSelf(mark, cell) 
+            // updateArray(mark, cell, array)
+            
+            // if(checkWin(mark, array)){
+            //     console.log(`${mark}` + " " + 'Wins')
+            // } else if (checkTie(array)){
+            //     console.log(checkTie(array))
+            
+            // }  
+            // switchTurns()
+         
+            // if(getActivePlayer().ai === true){
+            // setTimeout(() => {
+            //     aiTakeTurn(aiModule.bestSpot( getActivePlayer(),BoardModule.squares));
+            //   }, 1000);
+            // }
