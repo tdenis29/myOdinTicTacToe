@@ -58,6 +58,9 @@ const BoardModule = (() => {
             document.getElementById('startgame').classList.add('visible')
         } 
     }
+    function displayWinner(message){
+        document.getElementById('winner').textContent = message
+    }
         return {
             squares,
             getBoardState,
@@ -65,6 +68,7 @@ const BoardModule = (() => {
             drawSelf,
             hidePlayerForm,
             fillInfo,
+            displayWinner
         }
 })()
 
@@ -195,9 +199,11 @@ const GameModule = (() => {
                 updateArray(mark, cell, array)
                 
                 if(checkWin(mark, array)){
-                    console.log(`${mark}` + " " + 'Wins')
+                    let message = (`${mark}` + " " + 'Wins')
+                    BoardModule.displayWinner(message)
                 } else if (checkTie(array)){
-                    console.log("Cat's Game")
+                    let message = "Cat's Game"
+                    BoardModule.displayWinner(message)
                 }  
                 switchTurns()
                 if(getActivePlayer().ai === true){
