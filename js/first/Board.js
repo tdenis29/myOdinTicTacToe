@@ -1,15 +1,11 @@
 "use strict";
 
 
-const playerFactory = (_name,_mark, active, ai) => {
+const playerFactory = (name,mark, active, ai) => {
     'use strict';
-    const getName = () => _name;
-    const getMark = () => _mark;
-
-
     return {
-        getName,
-        getMark,
+        name,
+        mark,
         active,
         ai
     }
@@ -23,7 +19,6 @@ const BoardModule = (() => {
     let squares = [0,1,2,3,4,5,6,7,8];
 
     function drawSelf (mark, cell) {
-        console.log('i failed at drawSelf')
         let playerMark = document.createElement("p");
         let playerNode = document.createTextNode(mark);
         playerMark.appendChild(playerNode);
@@ -38,18 +33,30 @@ const BoardModule = (() => {
       _boardState = state;
       return _boardState
     }
-    function hidePlayerForm(e){
+    function hidePlayerForm(e, player, id){
         let form = e.target.parentNode;
-        let info = e.target.parentNode.nextSibling.nextSibling;
-        console.log(info)
         form.classList.toggle("fade-out")
-        info.classList.toggle("visible")
-        startGameButton.classList.add('visible')
-        
+        fillInfo(player, id)
     }
 
-    function fillInfo(){
-
+    function fillInfo(obj, number){
+        let {name, mark, ai} = obj
+        let nameElement = `player${number}Name`
+        let markElement = `player${number}Mark`
+        let typeElement = `player${number}Type`  
+        document.getElementById(`${nameElement}`).textContent = name
+        document.getElementById(`${markElement}`).textContent = mark
+    
+        document.getElementById(`${typeElement}`).textContent = ai === true ? "AI" : "Human"
+        if(number == 1){
+            document.getElementById('player1Info').classList.add("visible")
+        } 
+        if(number == 2){
+            document.getElementById("player2Info").classList.add("visible")
+        }    
+        if(GameModule.players.length === 2){
+            document.getElementById('startgame').classList.add('visible')
+        } 
     }
         return {
             squares,
@@ -57,6 +64,7 @@ const BoardModule = (() => {
             updateBoardState,
             drawSelf,
             hidePlayerForm,
+            fillInfo,
         }
 })()
 
@@ -104,7 +112,7 @@ const GameModule = (() => {
             let ai = document.getElementById(aiElement).value
     
             if(name === null || name === ""){
-                name = `Player ${mark}`
+                name = `Player ${playerId}`
             }
             if(playerNumber === 1 && mark === "X"){
              document.getElementById('X2').disabled = true;
@@ -132,22 +140,24 @@ const GameModule = (() => {
             }
             let player = playerFactory(name,mark,active, ai)
             players.push(player)
-            BoardModule.hidePlayerForm(e)
+            BoardModule.hidePlayerForm(e, player,playerId)
     }
    
        function getActivePlayer(){
         return GameModule.players.find(player => player.active);
        }
+
        function getNotActivePlayer(){
         return GameModule.players.find(player => !player.active)
        }
+
        function switchTurns(){
         for(let player of GameModule.players){
             player.active = player.active === true ? false : true;
         }
        }
+
        function updateArray(mark, cell, array){
-        console.log(array)
         for(let i = 0; i < array.length; i++){
             if(cell.id == i){
                 array[i] = mark;
@@ -177,7 +187,7 @@ const GameModule = (() => {
     
         function takeTurn(cell, playerActive) { 
             let array = BoardModule.squares
-            let mark = playerActive.getMark() 
+            let mark = playerActive.mark 
             if(checkTie(array) === false){
 
                 BoardModule.drawSelf(mark, cell)
@@ -189,9 +199,7 @@ const GameModule = (() => {
                 } else if (checkTie(array)){
                     console.log("Cat's Game")
                 }  
-
                 switchTurns()
-             
                 if(getActivePlayer().ai === true){
                     setTimeout(() => {
                         aiTakeTurn(aiModule.bestSpot( getActivePlayer(),BoardModule.squares));
@@ -280,9 +288,9 @@ const aiModule = (() => {
     function bestSpot(player, newBoard){
         let availSpots = _emptySquares(newBoard);
      
-        if (GameModule.checkWin(GameModule.getNotActivePlayer().getMark(), newBoard)) {
+        if (GameModule.checkWin(GameModule.getNotActivePlayer().mark, newBoard)) {
           return {score: -10};
-        } else if (GameModule.checkWin(GameModule.getActivePlayer().getMark(), newBoard)) {
+        } else if (GameModule.checkWin(GameModule.getActivePlayer().mark, newBoard)) {
           return {score: 10};
         } else if (availSpots.length === 0) {
           return {score: 0};
@@ -295,7 +303,7 @@ const aiModule = (() => {
           
           move.index = newBoard[availSpots[i]];
           
-          newBoard[availSpots[i]] = player.getMark();
+          newBoard[availSpots[i]] = player.mark;
 
           if (player == GameModule.getActivePlayer())
             move.score = bestSpot(GameModule.getNotActivePlayer(), newBoard).score;
@@ -344,21 +352,4 @@ const aiModule = (() => {
 
     }
 })();
-            // let array = BoardModule.squares
-            // let mark = playerActive.getMark()  
-            // BoardModule.drawSelf(mark, cell) 
-            // updateArray(mark, cell, array)
-            
-            // if(checkWin(mark, array)){
-            //     console.log(`${mark}` + " " + 'Wins')
-            // } else if (checkTie(array)){
-            //     console.log(checkTie(array))
-            
-            // }  
-            // switchTurns()
-         
-            // if(getActivePlayer().ai === true){
-            // setTimeout(() => {
-            //     aiTakeTurn(aiModule.bestSpot( getActivePlayer(),BoardModule.squares));
-            //   }, 1000);
-            // }
+        

@@ -12,13 +12,7 @@
 <body>
     <header class="gameHeader">
         <h1>The Odin Tic Tac Toe</h1> 
- 
 
-        <div class="top-button-container">
-            <button id="startgame" class="startGameButton">Start</button>
-            <button id="restart" onclick="BoardModule.myRestart()">Restart</button>
-
-        </div>
         <h2 id="winner"></h2>
     </header>
     <div class="game">
@@ -48,10 +42,10 @@
                     </div>
                     <button class="createPlayer1" id="createPlayer1">Create Player</button>
                 </div>
-                <div class="playerInfo" data-player="1">
-                        <p class="player1Name">Tyson</p>
-                        <p class="player1Mark">X</p>
-                        <p class="player1Type">Human</p>
+                <div class="playerInfo" id="player1Info" >
+                        <p class="playerName" id="player1Name">Tyson</p>
+                        <p class="playerMark" id="player1Mark">X</p>
+                        <p class="playerType" id="player1Type">Human</p>
                    </div>
                 </div>
 
@@ -92,14 +86,17 @@
         </div>
             <button class="createPlayer2" id="createPlayer2">Create Player</button>
         </div>
-        <div class="playerInfo" data-player="2">
-            <p class="player1Name">Tyson</p>
-            <p class="player1Mark">X</p>
-            <p class="player1Type">Human</p>
+        <div class="playerInfo" id="player2Info">
+            <p class="playerName" id="player2Name">Tyson</p>
+            <p class="playerMark" id="player2Mark">X</p>
+            <p class="playerType" id="player2Type">Human</p>
         </div>
-     
     </div>
-
+    </div>
+    <div class="top-button-container">
+        <button id="startgame" class="startGameButton">Start</button>
+        <button id="restart" onclick="BoardModule.myRestart()">Restart</button>
+    </div>
 
     <script src="js/first/Board.js"></script>
     <script src="js/first/app.js"></script>
