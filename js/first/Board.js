@@ -72,7 +72,7 @@ const GameModule = (() => {
 
     function startGame(){
     applyEvent();
-    if(getActivePlayer().ai === true || getNotActivePlayer().ai === true){
+    if(getActivePlayer().ai === true && getNotActivePlayer().ai === true){
             aiTakeTurn(aiModule.bestSpot( getActivePlayer(),BoardModule.squares));
         }
         
@@ -191,12 +191,18 @@ const GameModule = (() => {
                 switchTurns()
                 if(getActivePlayer().ai === true){
                     setTimeout(() => {
-                        aiTakeTurn(aiModule.bestSpot( getActivePlayer(),BoardModule.squares));
+                        if(getActivePlayer().ai === true){
+                            aiTakeTurn(aiModule.bestSpot( getActivePlayer(),BoardModule.squares));  
+                        }
+                      
                     }, 1000);
                 }
             }
+       }
+       function gameLoop(){
 
        }
+ 
 
         function checkWin(mark, array){
             const owner = mark
